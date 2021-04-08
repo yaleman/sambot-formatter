@@ -9,5 +9,10 @@ WorkingDirectory=/var/www/sambot-formatter
 Environment="PATH=/var/www/sambot-formatter/venv/bin"
 ExecStart=/var/www/sambot-formatter/venv/bin/uwsgi --ini /var/www/sambot-formatter/sambot-formatter.ini
 
+RestartSec=1
+Restart=always
+StartLimitBurst=1
+StartLimitIntervalSec=5
+
 [Install]
 WantedBy=multi-user.target
