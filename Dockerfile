@@ -39,9 +39,6 @@ RUN CRYPTOGRAPHY_DONT_BUILD_RUST=1 pip install -r requirements.txt
 
 # -u - unbuffered output
 # CMD [ "python", "-u", "/usr/src/app/ingest.py", "--plugin_dir", "/root/.stoq/plugins" ]
-RUN mkdir templates
-COPY templates/hello.html templates/
-COPY flaskapp.py ./
+COPY formatter/ ./
 
 EXPOSE 5000
-CMD [ "python", "flaskapp.py" ]

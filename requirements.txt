@@ -2,3 +2,4 @@ defang
 Flask
 wtforms
 iocextract
+uwsgi

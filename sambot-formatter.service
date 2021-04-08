@@ -1,0 +1,13 @@
+[Unit]
+Description=uWSGI instance to serve sambot-formatter
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/sambot-formatter
+Environment="PATH=/var/www/sambot-formatter/venv/bin"
+ExecStart=/var/www/sambot-formatter/venv/bin/uwsgi --ini /var/www/sambot-formatter/sambot-formatter.ini
+
+[Install]
+WantedBy=multi-user.target
