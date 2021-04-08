@@ -56,55 +56,55 @@ class ReusableForm(Form):
                            default='red',
                            )
 
-    @app.route("/", methods=['GET', 'POST'])
-    def hello():
-        form = ReusableForm(request.form)
+@app.route("/<path:path>", methods=['GET', 'POST'])
+def hello(path):
+    form = ReusableForm(request.form)
 
-        if request.method == 'POST':
-            userinput=request.form['userinput']
-            report_type=request.form['report_type']
-            tlp_level=request.form['tlp_level']
+    if request.method == 'POST':
+        userinput=request.form['userinput']
+        report_type=request.form['report_type']
+        tlp_level=request.form['tlp_level']
 
-        if form.validate():
-            if type_finder.findall(userinput):
-                report_type = type_finder.findall(userinput)[0]
-                flash(f"User included report type ({report_type}) with input data",category='warning')
-            if tlp_finder.findall(userinput):
-                tlp_level = tlp_finder.findall(userinput)[0]
-                flash(f"User included tlp level ({tlp_level}) with input data",category='warning')
+    if form.validate():
+        if type_finder.findall(userinput):
+            report_type = type_finder.findall(userinput)[0]
+            flash(f"User included report type ({report_type}) with input data",category='warning')
+        if tlp_finder.findall(userinput):
+            tlp_level = tlp_finder.findall(userinput)[0]
+            flash(f"User included tlp level ({tlp_level}) with input data",category='warning')
 
-            flash("")
-            flash(f"type: {report_type}", category='info')
-            flash(f"tag: tlp:{tlp_level.upper()}", category='info')
-            # Save the comment here.
+        flash("")
+        flash(f"type: {report_type}", category='info')
+        flash(f"tag: tlp:{tlp_level.upper()}", category='info')
+        # Save the comment here.
 
-            seen_iocs = []
-            datatypes = {
-                'url' : iocextract.extract_urls,
-                'ip' : iocextract.extract_ips,
-                'from' : iocextract.extract_emails,
-                'md5' : iocextract.extract_md5_hashes,
-                'sha1' : iocextract.extract_sha1_hashes,
-                'sha256' : iocextract.extract_sha256_hashes,
-                'sha512' : iocextract.extract_sha512_hashes,
-            }
-            for datatype in datatypes:
-                for extracted_value in datatypes[datatype](userinput):
-                    if str(extracted_value) not in seen_iocs:
-                        seen_iocs.append(str(extracted_value))
-                        flash(f"{datatype}: {iocextract._refang_common(extracted_value)}", category='info')
+        seen_iocs = []
+        datatypes = {
+            'url' : iocextract.extract_urls,
+            'ip' : iocextract.extract_ips,
+            'from' : iocextract.extract_emails,
+            'md5' : iocextract.extract_md5_hashes,
+            'sha1' : iocextract.extract_sha1_hashes,
+            'sha256' : iocextract.extract_sha256_hashes,
+            'sha512' : iocextract.extract_sha512_hashes,
+        }
+        for datatype in datatypes:
+            for extracted_value in datatypes[datatype](userinput):
+                if str(extracted_value) not in seen_iocs:
+                    seen_iocs.append(str(extracted_value))
+                    flash(f"{datatype}: {iocextract._refang_common(extracted_value)}", category='info')
 
-            if sha256_filename_finder.findall(userinput):
-                for result in sha256_filename_finder.findall(userinput):
-                    flash(f"hash|filename: {'|'.join(result)}", category='info')
+        if sha256_filename_finder.findall(userinput):
+            for result in sha256_filename_finder.findall(userinput):
+                flash(f"hash|filename: {'|'.join(result)}", category='info')
 
-            if subject_finder.findall(userinput):
-                for result in subject_finder.findall(userinput):
-                    flash(f"subject: {result}", category='info')
-        else:
-            flash('Please enter some data')
+        if subject_finder.findall(userinput):
+            for result in subject_finder.findall(userinput):
+                flash(f"subject: {result}", category='info')
+    else:
+        flash('Please enter some data')
 
-        return render_template('hello.html', form=form)
+    return render_template('hello.html', form=form)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
