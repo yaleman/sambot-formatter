@@ -1,0 +1,94 @@
+<html>
+<head>
+
+<title>MISP Thinger</title>
+
+<style type='text/css'>
+#userinput, #outputData {
+    width: 80%;
+    max-height: 50%;
+    min-height: 30%;
+    height: 200;
+}
+body, textarea, pre {
+    font-family:Verdana, Geneva, Tahoma, sans-serif
+}
+</style>
+<script type='text/javascript'>
+    function copyText() {
+        // get the OUTER html of the element you want to copy
+        var text = document.getElementById('outputData');
+
+        // put that outerHTML into another textbox for copying
+        /*var tempTextbox = document.getElementById('copyingText');
+        tempTextbox.value = text.replace("\n", "\r\n");
+
+        tempTextbox.focus();
+        tempTextbox.select();
+        */
+
+        text.focus();
+        text.select();
+        document.execCommand("Copy");
+      }
+</script>
+</head>
+<body>
+
+<form action="" method="post">
+             {{form.csrf}}
+             <div>
+                 <h1>TLP Level</h1>
+             </div>
+             <div class="input text">
+                 {% for subfield in form.tlp_level %}
+                 {{ subfield }} {{ subfield.label }}<br />
+                 {% endfor %}
+                </div>
+            <div>
+                <h1>Report Type</h1>
+            </div>
+            <div class="input text">
+                 <!--<p>{{ form.report_type.label }}</p>-->
+
+                 {% for subfield in form.report_type %}
+                 {{ subfield }} {{ subfield.label }}<br />
+                 {% endfor %}
+            </div>
+             <div class="input text">
+                 <h1>{{ form.userinput.label }}</h1>
+                 <p>{{ form.userinput }}</p>
+             </div>
+<div class="input submit">
+    <input type="submit" value="Submit"></div>
+</form>
+
+<div>
+<p><button onclick="copyText()" id="Button">Copy text</button></p>
+
+<!-- <pre id='outputData'> -->
+{% with messages = get_flashed_messages(with_categories=true, category_filter='warning') %}
+    {% if messages %}
+        <p>
+            {% for message in messages %}
+            {{ message[1] }}<br />
+            {% endfor %}
+        </p>
+    {% endif %}
+{% endwith %}
+
+
+{% with messages = get_flashed_messages(with_categories=true, category_filter='info') %}
+{% if messages %}
+<textarea id='outputData'>
+{% for message in messages %}{{ message[1] }}
+{% endfor %}{% endif %}
+</textarea>
+{% endwith %}
+<!-- </pre> -->
+</p>
+</div>
+<input type="text" id="copyingText"/>
+</body>
+
+</html>
