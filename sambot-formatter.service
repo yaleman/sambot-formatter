@@ -1,6 +1,8 @@
 [Unit]
 Description=uWSGI instance to serve sambot-formatter
 After=network.target
+StartLimitBurst=1
+StartLimitIntervalSec=1
 
 [Service]
 User=www-data
@@ -9,10 +11,8 @@ WorkingDirectory=/var/www/sambot-formatter
 Environment="PATH=/var/www/sambot-formatter/venv/bin"
 ExecStart=/var/www/sambot-formatter/venv/bin/uwsgi --ini /var/www/sambot-formatter/sambot-formatter.ini
 
-RestartSec=1
+RestartSec=2
 Restart=always
-StartLimitBurst=1
-StartLimitIntervalSec=5
 
 [Install]
 WantedBy=multi-user.target
