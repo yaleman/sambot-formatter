@@ -55,8 +55,8 @@ class ReusableForm(Form):
                            validators=[validators.DataRequired()],
                            default='red',
                            )
-
-@app.route("/<path:path>", methods=['GET', 'POST'])
+@app.route('/', defaults={'path': ''}, methods=['GET', 'POST'])
+@app.route('/<path:path>', methods=['GET', 'POST'])
 def hello(path):
     form = ReusableForm(request.form)
 
